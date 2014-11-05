@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Version Control - Git</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+
+body {
+font-family: 'Droid Sans';
+font-size: 1.3em;
+}
+h1, h2, h3 {
+font-family: 'Yanone Kaffeesatz';
+font-weight: 400;
+margin-bottom: 0;
+}
+h1 { font-size: 4em; }
+h2 { font-size: 1.6em; }
+h3 { font-size: 1.2em; }
+.left-column > h3 { padding-left: 0.5em;}
+h3 { margin-top: 0.4em; }
+.footnote {
+position: absolute;
+bottom: 3em;
+}
+li p { line-height: 1.25em; }
+.red { color: #fa0000; }
+.large { font-size: 2em; }
+a, a > code {
+color: rgb(249, 38, 114);
+text-decoration: none;
+}
+code {
+-moz-border-radius: 5px;
+-web-border-radius: 5px;
+background: #e7e8e2;
+border-radius: 5px;
+font-size: 16px;
+}
+.pull-left {
+float: left;
+width: 47%;
+}
+.pull-right {
+float: right;
+width: 47%;
+}
+.pull-right ~ p {
+clear: both;
+}
+#slideshow .slide .content code {
+font-size: 0.8em;
+}
+#slideshow .slide .content pre code {
+font-size: 0.9em;
+padding: 15px;
+}
+.inverse {
+background: #272822;
+color: #777872;
+text-shadow: 0 0 20px #333;
+}
+.inverse h1, .inverse h2 {
+color: #f3f3f3;
+line-height: 0.8em;
+}
+
+/* Slide-specific styling */
+#slide-inverse .footnote {
+bottom: 12px;
+left: 20px;
+}
+#slide-how .slides {
+font-size: 0.9em;
+position: absolute;
+top:  151px;
+right: 140px;
+}
+#slide-how .slides h3 {
+margin-top: 0.2em;
+}
+#slide-how .slides .first, #slide-how .slides .second {
+padding: 1px 20px;
+height: 90px;
+width: 120px;
+-moz-box-shadow: 0 0 10px #777;
+-webkit-box-shadow: 0 0 10px #777;
+box-shadow: 0 0 10px #777;
+}
+#slide-how .slides .first {
+background: #fff;
+position: absolute;
+top: 20%;
+left: 20%;
+z-index: 1;
+}
+#slide-how .slides .second {
+position: relative;
+background: #fff;
+z-index: 0;
+}
+
+/* Two-column layout */
+.left-column {
+color: #777;
+width: 20%;
+height: 92%;
+float: left;
+}
+.left-column h2:last-of-type, .left-column h3:last-child {
+    color: #000;
+}
+.right-column {
+width: 75%;
+float: right;
+padding-top: 2em;
+}
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+layout: true
+class: center, middle, inverse
+---
+# Version Control
+Christophe Augier
+
+[christophe.augier@gmail.com](mailto:christophe.augier@gmail.com)
+---
+layout: false
+.left-column[
+## About VC
+]
+.right-column[
+Version Control is the management of changes to documents.
+
+- The need to organize and control revisions is probably as old as writing.
+
+- Became more prominent with the advent of printing.
+
+- And even more in our computer age.
+
+Version Control Systems offer a mean to:
+
+- Keep every version of a document.
+
+- Revert files back to a previous state.
+- Revert the entire project back to a previous state.
+
+- Compare changes over time.
+
+- Find what changes from when are causing a problem.
+
+- and more&#133;
+]
+???
+great tool if you screwed things up
+
+life saver
+---
+layout: false
+.left-column[
+## About VC
+## Local
+]
+.right-column[
+People used to copy or archive files in time-stamped directories:
+
+- Very common because so simple.
+- But also error prone when the number of versions increases &#9760;.
+
+__Answer__: a Version Control Systems implementation local to a computer.
+
+- A database keep all the changes done to a file.
+- Changes are kept sequentially (delta patches.)
+- It is possible to re-create any version of any file.
+
+***
+
+__Example__: RCS
+]
+???
+comments
+---
+layout: false
+.left-column[
+## About VC
+## Local
+## Centralized
+]
+.right-column[
+_But what when multiple developers need to collaborate?_
+
+__Answer:__ Centralized Version Control Systems (CVCS).
+
+1. A single server that contains all the versioned files.
+
+2. A number of clients that _check out_ files.
+
+__Cons:__ the server is the single point of failure!
+
+- Server down &#8658; no _check out_ no _commit_ &#128544;.
+
+- Can be compromised and rogue data inserted &#128561;.
+
+- Hardware crash can mean the loss of a whole project &#128565;.
+
+- etc &#128531;.
+
+***
+
+__Examples:__ CVS, Subversion, Perforce, Clearcase
+]
+???
+comments
+---
+layout: false
+.left-column[
+## About VC
+## Local
+## Centralized
+## Distributed
+]
+.right-column[
+_Is there anything better than CVCS, with more than one server?_
+
+__Answer:__ Distributed Version Control Systems (DVCS).
+
+Not one server anymore but instead all clients are servers:
+
+- All clients mirror the _repository_ with the complete history.
+
+- Solves all single point of failure problems but means more organization:
+  - clients can be dealing with several _repositories_ instead of a single one.
+  - new workflows, possibly feeling more complex for users used to CVCS.
+
+***
+
+__Examples:__ Mercurial, Bazaar, Darcs, Git.
+]
+???
+This is where Distributed Version Control Systems step in
+
+If any server dies and these systems were collaborating via it any of the client repo can be copied back up to the server and restore it.
+
+Every checkout is a full backup of all the data.
+comments
+---
+layout: false
+.left-column[
+## About VC
+## Local
+## Centralized
+## Distributed
+## Terminology
+]
+.right-column[
+A few terms used when talking about Version Control Systems:
+
+- __repository__: where files' current and historical data are stored, often on a
+server.
+
+- __working copy__: the local copy of files from a repository, at a specific time
+or revision.
+
+- __check out__: create a local working copy from the repository.
+
+- __change__, __change set__: a specific modification to one or multiple documents
+under version control.
+
+- __commit__: to write or merge the changes made in the working copy back to the
+repository.
+
+- __branch__: in branches different versions of the files can evolve
+independently.
+
+- __head__: the most recent commit of a branch.
+]
+???
+Comments:
+
+- check out: A user may specify a specific revision or obtain the latest. The
+term 'checkout' can also be used as a noun to describe the working copy.
+
+- working copy: All work done to the files in a repository is
+initially done on a working copy, hence the name. Conceptually, it is a sandbox.
+
+- change, changeset: The granularity of the modification considered a change
+varies between version control systems.
+    On many version control systems with atomic multi-change commits, a change
+list, change set, update, or patch identifies the set of changes made in a
+single commit. This can also represent a sequential view of the source code,
+allowing the examination of source "as of" any particular changelist ID.
+
+- commit: To commit (check in, ci or, more rarely, install, submit or record) is
+to The terms 'commit' and 'checkin' can also be used as nouns to describe the new
+revision that is created as a result of committing.
+
+- branch: A set of files under version control may be branched or forked at a
+point in time so that, from that time forward, two copies of those files may
+develop at different speeds or in different ways independently of each other.
+
+- head: Also sometimes called tip, this refers to the most recent commit, either
+to the trunk or to a branch. The trunk and each branch have their own head,
+though HEAD is sometimes loosely used to refer to the trunk.[7]
+---
+layout: false
+.left-column[
+## About VC
+## Local
+## Centralized
+## Distributed
+## Terminology
+]
+.right-column[
+A few terms used when talking about Version Control Systems:
+
+- __master__, __trunk__, __mainline__: the unique line of development that is
+not a branch.
+
+- __label__, __tag__, __baseline__: refers to an important snapshot in time (for
+instance a release version.)
+
+- __merge__: operation in which two sets of changes are applied to a file or set
+of files.
+
+- __conflict__: occurs when different parties make changes to the same document,
+and the system is unable to reconcile the changes.
+
+- __resolve__: user intervention to address a conflict.
+]
+???
+Comments:
+
+- label: These files at that point may all be tagged with a user-friendly,
+meaningful name or revision number. See baselines, labels and tags.
+
+- merge: A merge or integration is an operation in which two sets of changes are
+applied to a file or set of files. Some sample scenarios are as follows:
+  - A user, working on a set of files, updates or syncs their working copy with
+changes made, and checked into the repository, by other users.[8]
+  - A user tries to check in files that have been updated by others since the
+files were checked out, and the revision control software automatically merges
+the files
+  - A branch is created, the code in the files is independently edited, and the
+updated branch is later incorporated into a single, unified trunk.
+
+- conflict: A user must resolve the conflict by combining the changes, or by
+selecting one change in favour of the other.
+
+- resolve:     The act of user intervention to address a conflict between
+different changes to the same document.
+
+---
+layout: true
+class: center, middle, inverse
+---
+#Git
+---
+layout: false
+.left-column[
+## History
+]
+.right-column[
+Originates from Linux kernel development:
+
+- From 1991-2002 changes to the kernel were passed around as patches and
+archived files.
+
+- In 2002, the Linux kernel project started using a proprietary DVCS called
+BitKeeper.
+
+- In 2005, relationship between the Linux kernel community and the company
+developing BitKeeper broke down.
+
+&#8658; Linus Torvalds started to develop its own tool based on the lessons he
+learned managing the Linux kernel project and while using BitKeeper.
+
+The new system goals were:
+
+- Speed.
+- Simple design.
+- Strong support for non-linear development (thousands of branches.)
+- Fully distributed.
+- Ability to handle large projects efficiently.
+]
+???
+Comments:
+
+free-of-charge status was revoked.
+
+Of course Linux kernel is a large project.
+---
+layout: false
+.left-column[
+## History
+## Principles
+]
+.right-column[
+## Snapshots, Not Differences.
+
+Git stores data as snapshots of the project over time instead of storing data as
+changes to a base version of each file.
+
+![alt text](images/save_differences.png)
+
+Other VCS store data as changes.
+]
+???
+It's important to understand the fundamentals of how git works.
+
+If you already know about VCS please forget what you know.
+---
+layout: false
+.left-column[
+## History
+## Principles
+]
+.right-column[
+## Snapshots, Not Differences.
+
+Git stores data as snapshots of the project over time instead of storing data as
+changes to a base version of each file.
+
+![alt text](images/save_snapshots.png)
+
+Git store data as snapshots.
+]
+???
+---
+layout: false
+.left-column[
+## History
+## Principles
+]
+.right-column[
+## Nearly every operation is local.
+
+Once you _check out_ a project repository, all the data of the
+project is mirrored locally. Hence:
+
+- Browsing the history is done locally.
+
+- Analyzing the history is done locally.
+
+- You can work even if you don't have a network access.
+
+&#8658; Git looks fast because everything is local. Of course at the expense of
+more disk storage.
+]
+???
+
+Work offline: edit files and commit changes locally: not possible with CVS or
+Subversion.
+---
+layout: false
+.left-column[
+## History
+## Principles
+]
+.right-column[
+## Git has integrity
+
+- Everything in Git is check-summed before being stored.
+
+- If something (file, directory) changed, Git knows about it.
+
+- Uses SHA-1 hash for check-sum:
+  - 40-character string of hexadecimal characters.
+  - Calculated based on the contents of a file or directory.
+  - Looks like this:
+
+  `d8019750d4a0e791bb8fc985576a12f32ef59ac8`
+
+- SHA-1 hashes are used all over the place in Git.
+
+]
+---
+layout: false
+.left-column[
+## History
+## Principles
+]
+.right-column[
+## Git generally only adds data
+
+- Nearly all actions on git are only adding data.
+
+- It is difficult to do anything that is undoable.
+
+- Once changes are committed you can (almost) not lose them.
+
+- Even more difficult if you pushed your changes to a remote repository.
+]
+---
+layout: false
+.left-column[
+## History
+## Principles
+]
+.right-column[
+## Files have three states.
+
+![Files have three states](images/file_three_states.png)
+]
+???
+
+- _Modified_ means that you have changed the file but have not committed it to your
+database yet.
+
+- _Committed_ means that the data is safely stored in your local database. 
+
+- _Staged_ means that you have marked a modified file in its current version to
+go into your next commit snapshot.
+
+- The _Git directory_ is where Git stores the metadata and object database for
+your project. This is the most important part of Git, and it is what is copied
+when you clone a repository from another computer.
+
+- The _working directory_ is a single checkout of one version of the project.
+These files are pulled out of the compressed database in the Git directory and
+placed on disk for you to use or modify.
+
+- The _staging area_ is a simple file, generally contained in your Git directory,
+that stores information about what will go into your next commit. It’s sometimes
+referred to as the index, but it’s becoming standard to refer to it as the
+staging area.
+---
+layout: false
+.left-column[
+## History
+## Principles
+]
+.right-column[
+## Branches
+
+Branches is one of Git many great feature.
+
+- Code can fork in separate branches.
+
+- Branches cab be merged together.
+
+- Switch back and forth between branches is easy and fast.
+
+- Facilitate parallel work, enable good practices.
+
+![Branches](images/branches.png)
+]
+???
+---
+layout: false
+.left-column[
+## History
+## Principles
+## Getting Started
+### First-Time
+]
+.right-column[
+### Your Identity
+
+    $ git config --global user.name "John Doe"
+    $ git config --global user.email johndoe@example.com
+
+### Your Editor
+
+    $ git config --global core.editor vim
+
+### Your Diff Tool
+
+    $ git config --global merge.tool vimdiff
+
+### Checking Your Settings
+
+    $ git config --list
+]
+???
+Git comes with a tool called git config that lets you get and set configuration
+variables that control all aspects of how Git looks and operates. These
+variables can be stored in three different places:
+
+ - /etc/gitconfig file: Contains values for every user on the system and all
+their repositories. If you pass the option--system to git config, it reads and
+writes from this file specifically.
+ - ~/.gitconfig file: Specific to your user. You can make Git read and write to
+this file specifically by passing the --global option.
+ - config file in the git directory (that is, .git/config) of whatever
+repository you’re currently using: Specific to that single repository. Each
+level overrides values in the previous level, so values in .git/config trump
+those in /etc/gitconfig.
+---
+layout: false
+.left-column[
+## History
+## Principles
+## Getting Started
+### First-Time
+### Help!
+]
+.right-column[
+### Getting Help
+
+    $ git help <verb>
+    $ git <verb> --help
+    $ man git-<verb>
+]
+???
+---
+layout: false
+.left-column[
+## History
+## Principles
+## Getting Started
+## Basics
+### Repository
+]
+.right-column[
+### Getting a Git Repository
+
+    $ git init
+
+### Cloning a Git Repository
+
+    $ git clone git://github.com/anyone/whatever.git
+
+Use a different name:
+
+    $ git clone git://github.com/anyone/whatever.git myname
+]
+???
+---
+layout: false
+.left-column[
+## History
+## Principles
+## Getting Started
+## Basics
+### Repository
+### Changes
+]
+.right-column[
+Changes on files or directories are stored as snapshots also known as commits.
+
+Git defines several states a file or more precisely changes to a file can have.
+
+![Files Lifecycle](images/file_lifecycle.png)
+]
+???
+---
+layout: false
+.left-column[
+## History
+## Principles
+## Getting Started
+## Basics
+### Repository
+### Changes
+]
+.right-column[
+### Checking the Status of Your Files
+
+    $ git status
+
+### Tracking New Files
+
+    $ git add new_file.txt
+
+### Staging Modified Files
+
+    $ git add existing_file.txt
+
+### Ignoring Files
+
+    $ vim .gitignore
+
+]
+???
+---
+layout: false
+.left-column[
+## History
+## Principles
+## Getting Started
+## Basics
+### Repository
+### Changes
+]
+.right-column[
+### Viewing Your Staged or Unstaged Changes
+
+    $ git diff --cached
+    $ git diff
+
+### Committing Your Changes
+
+    $ git commit
+
+### Removing Files
+
+    $ git rm file_to_remove.txt
+
+### Moving Files
+
+    $ git mv file_from.txt file_to.txt
+]
+???
+---
+layout: false
+.left-column[
+## History
+## Principles
+## Getting Started
+## Basics
+### Repository
+### Changes
+### Branches
+]
+.right-column[
+### Listing Branches
+
+    $ git branch
+
+### Creating and Deleting Branches
+
+    $ git branch branch-name
+    $ git branch -d branch-name
+
+### Switching to a Branch
+
+    $ git checkout branch-name
+
+### Merging a Branch on Current Branch
+
+    $ git merge branch-name
+]
+???
+---
+layout: false
+.left-column[
+## History
+## Principles
+## Getting Started
+## Basics
+### Repository
+### Changes
+### Branches
+### History
+]
+.right-column[
+### Viewing the Commit History
+
+    $ git log
+
+### Using a GUI to Visualize History
+
+    $ gitk
+    $ gitg
+]
+???
+---
+layout: false
+.left-column[
+## History
+## Principles
+## Getting Started
+## Basics
+### Repository
+### Changes
+### Branches
+### History
+### Sharing
+]
+.right-column[
+### Listing Remote Repositories
+
+    $ git remote
+
+### Adding or Removing Remote Repositories
+
+    $ git remote add remote-name url
+    $ git remote rm remote-name
+
+### Fetching and Pulling from Remote Repositories
+
+    $ git fetch remote-name
+
+### Pushing to Remotes Repositories
+
+    $ git push remote-name branch-name
+]
+???
+---
+layout: false
+.left-column[
+## History
+## Principles
+## Getting Started
+## Basics
+## Workflow
+]
+.right-column[
+### Example of Daily Workflow
+
+![Daily Workflow](images/workflow.png)
+]
+???
+---
+layout: false
+.left-column[
+## History
+## Principles
+## Getting Started
+## Basics
+## Workflow
+## Best Practices
+]
+.right-column[
+### Do Atomic Commits
+
+- Don't mix different works in a same commit.
+
+- One new feature: one commit.
+
+- One bug fix: one commit.
+
+- `$ git add --patch`
+
+  - Include only specific chunks of code in commit.
+
+  - Force code review before committing.
+]
+???
+---
+layout: false
+.left-column[
+## History
+## Principles
+## Getting Started
+## Basics
+## Workflow
+## Best Practices
+]
+.right-column[
+### Write Good Commit Messages
+
+- Message must be useful.
+
+- Title: use imperative tense, &lt;= 50 characters.
+
+- Body: more details if necessary, &lt;= 72 characters.
+
+- Reference to bug tracker issue should be added.
+]
+???
+---
+layout: false
+.left-column[
+## History
+## Principles
+## Getting Started
+## Basics
+## Workflow
+## Best Practices
+]
+.right-column[
+### Commit Frequently
+
+`$ git rebase --interactive` is there for you to look smart:
+
+- Meld commits together.
+
+- Remove commits.
+
+- Edit commits.
+
+- Reorder commits.
+]
+???
+---
+layout: false
+.left-column[
+## History
+## Principles
+## Getting Started
+## Basics
+## Workflow
+## Best Practices
+]
+.right-column[
+### Do Not Add Every Single File
+
+Only source files or configuration files should be added to the repository.
+
+Files that can be generated should be kept out of the repository.
+]
+???
+---
+layout: false
+.left-column[
+## History
+## Principles
+## Getting Started
+## Basics
+## Workflow
+## Best Practices
+## Exercise
+]
+.right-column[
+### Use Git and github
+
+In group of three:, create a repository on github and share it with your group members.
+
+You are asked to concurrently do on the same repository:
+
+1. Create files.
+1. Delete files.
+1. Modify files, add and remove lines.
+1. Rename files, change their name and directory.
+1. Create a branch, with two or more commits and merge it in master.
+1. Checkout an older version, do some changes (creating conflicts) in a branch
+and merge it in master.
+1. Checkout an older version, do some changes (creating conflicts) in a branch
+and rebase it on master (keep a backup.)
+1. Do an interactive rebase where you squash two commits (keep a backup.)
+1. Do an interactive rebase where you split one commits (keep a backup.)
+]
+???
+---
+## References:
+
+[Git SCM](http://git-scm.com)
+
+[Pro Git Book](http://git-scm.com)
+
+[Git Reference](http://gitref.org)
+
+[Git Best practices](http://sethrobertson.github.io/GitBestPractices/)
+
+[Git aliases](http://haacked.com/archive/2014/07/28/github-flow-aliases/)
+
+
+    </textarea>
+    <script src="remark-0.6.0.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
+
+
