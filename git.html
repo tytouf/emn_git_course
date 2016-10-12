@@ -907,21 +907,20 @@ layout: false
 .right-column[
 ### Use Git and github
 
-In group of three:, create a repository on github and share it with your group members.
+Using the repository located at http://github.com/tytouf/emn_git_exo,
+you are asked to:
 
-You are asked to concurrently do on the same repository:
-
-1. Create files.
-1. Delete files.
-1. Modify files, add and remove lines.
-1. Rename files, change their name and directory.
-1. Create a branch, with two or more commits and merge it in master.
-1. Checkout an older version, do some changes (creating conflicts) in a branch
-and merge it in master.
-1. Checkout an older version, do some changes (creating conflicts) in a branch
-and rebase it on master (keep a backup.)
-1. Do an interactive rebase where you squash two commits (keep a backup.)
-1. Do an interactive rebase where you split one commits (keep a backup.)
+1. In a branch, one commit per action:
+    1. Create an empty file.
+    1. Modify this file, add and remove lines.
+    1. Rename this file, change its name or directory.
+    1. Delete the file.
+1. Create a branch, write test and update code to convert 50 to "L". Push branch.
+1. Checkout commit 22314d2 as a new branch, capitalize roman numbers and rebase this new branch onto master.
+1. Checkout commit 22314d2 as a new branch, capitalize roman numbers and merge this new branch into master.
+1. Take some time to think how these two ways to manage changes can work in a real situation.
+1. Do an interactive rebase where you squash two commits (fc1f408 and 0b65a6d)
+1. Do an interactive rebase where you will split commit 5886a61 into two commits.
 ]
 ???
 ---
